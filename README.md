@@ -1,5 +1,5 @@
 # SuperSCAIANN
-Waterloo experimental ANN Starcraft bot
+A very super Starcraft AI (using) Artificial Neural Network.
 
 ## "What do I do with this?"
 Open the solution is VS2013. Mess with the source files. Build the thing in Release or Debug. Release mode hides all the debugging related shenanigans (like debugdrawing for showing where units are moving to at the moment) so you probably won't use it, but it's going to be nice for seeing the end product without debugdraws slowing you down (drawing every frame is EXPENSIVE!)
