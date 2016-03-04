@@ -11,6 +11,7 @@ Throw it in \{Starcraft installation}\bwapi-data\AI . You might need to make the
 or
 
 >BWAPI {versionnumber} Injector [DEBUG]
+
 Based on which mode you're intending on using.
 
 After that, highlight the injector and go into its Config. Match the target DLL names to the one you generated, for example:
