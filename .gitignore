@@ -1,0 +1,4 @@
+/Release/*
+/bin/*
+*.exe
+*.dll
