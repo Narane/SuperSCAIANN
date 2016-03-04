@@ -1,0 +1,15 @@
+
+
+Inputs of the neural net
+
+Unit attributes (health, range, damage)
+
+5 most relevant enemy attributes 
+	(5 units chosen by heuristic; prioritize considering units that attacked it in last 3 seconds, and then by distance)
+	-> And their positions (by angle from unit and distance)
+	
+5 most relevant ally attributes
+	(choose by distance only)
+	
+Reward and punishment:
+ Every time something dies, give reward/punishment based on (enemy kills so far vs. allies died so far)
