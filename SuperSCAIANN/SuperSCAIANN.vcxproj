@@ -89,13 +89,9 @@
   <ItemGroup>
     <ClCompile Include="..\Source\Dll.cpp" />
     <ClCompile Include="..\Source\ExampleAIModule.cpp" />
-    <ClCompile Include="ANN.cpp" />
-    <ClCompile Include="MatrixMaths.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\ExampleAIModule.h" />
-    <ClInclude Include="ANN.h" />
-    <ClInclude Include="MatrixMaths.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
