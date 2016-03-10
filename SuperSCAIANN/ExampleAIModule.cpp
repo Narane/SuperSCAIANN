@@ -5,6 +5,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
+const float ExampleAIModule::GAS_MINERAL_COST_RATIO = 1.5f;
 
 void ExampleAIModule::onStart()
 {
@@ -56,7 +57,17 @@ void ExampleAIModule::onStart()
 		{
 			Broodwar << "The matchup is " << Broodwar->self()->getRace() << " vs " << Broodwar->enemy()->getRace() << std::endl;
 		}
+
+		//You're a cheater.
+
+		//Disable fog of war
+		Broodwar->sendText("war aint what it used to be");
+
+		//Full vision of map
+		Broodwar->sendText("black sheep wall");
+		
 	}
+
 }
 
 void ExampleAIModule::onEnd(bool isWinner)
@@ -68,6 +79,30 @@ void ExampleAIModule::onEnd(bool isWinner)
   }
 
   delete ANNInstance;
+}
+
+float ExampleAIModule::evaluateArmy(const BWAPI::Unitset &units)
+{
+	float score = 0;
+	for (const BWAPI::Unit &unit : units)
+	{
+		
+		// Ignore the unit if it no longer exists
+		// Make sure to include this block when handling any Unit pointer!
+		if (!unit->exists())
+			continue;
+
+		int gasPrice = unit->getType().gasPrice();
+		int mineralPrice = unit->getType().mineralPrice();
+		float totalPrice = mineralPrice + GAS_MINERAL_COST_RATIO * gasPrice;
+		int hp = unit->getHitPoints();
+		int maxhp = unit->getType().maxHitPoints();
+
+		float hpPercent = (float)hp / maxhp;
+		score += (hpPercent * totalPrice);
+	}
+
+	return score;
 }
 
 void ExampleAIModule::onFrame()
@@ -87,9 +122,23 @@ void ExampleAIModule::onFrame()
   if ( Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0 )
     return;
 
+
+
+  BWAPI::Unitset allyUnits = Broodwar->self()->getUnits();
+  BWAPI::Unitset enemyUnits = Broodwar->enemy()->getUnits();
+
+  float allyUnitScore = evaluateArmy(allyUnits);
+  float enemyUnitScore = evaluateArmy(enemyUnits);
+
+  //int allyUnitScore = Broodwar->self()->getUnitScore();
+  //int enemyUnitScore = Broodwar->enemy()->getUnitScore();
+
+  Broodwar->drawTextScreen(200, 40, "ALLY SCORE: %f ENEMY SCORE: %f", allyUnitScore, enemyUnitScore);
+
   // Iterate through all the units that we own
   for (auto &u : Broodwar->self()->getUnits())
   {
+
     // Ignore the unit if it no longer exists
     // Make sure to include this block when handling any Unit pointer!
     if ( !u->exists() )

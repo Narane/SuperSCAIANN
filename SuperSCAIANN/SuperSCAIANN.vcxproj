@@ -63,7 +63,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
-      <AdditionalDependencies>../lib/BWAPId.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../lib/BWAPId.lib;../lib/BWAPIClient.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -89,6 +89,7 @@
   <ItemGroup>
     <ClCompile Include="ANN.cpp" />
     <ClCompile Include="Dll.cpp" />
+    <ClCompile Include="ExampleAIClient.cpp" />
     <ClCompile Include="ExampleAIModule.cpp" />
     <ClCompile Include="MatrixMaths.cpp" />
   </ItemGroup>
