@@ -150,3 +150,20 @@ vector<vector<float>> MatrixMaths::HadamardMultiply(const vector<vector<float>>&
 
 	return (returnMat);
 }
+
+// Return a matrix that does element-wise multplication (needs matrices of same sizes)
+void MatrixMaths::MatrixInPlaceExp(vector<vector<float>>& LHS)
+{
+	if (LHS.size() == 0)
+	{
+		return;
+	}
+
+	for (size_t row = 0; row < LHS.size(); ++row)
+	{
+		for (size_t col = 0; col < LHS[0].size(); ++col)
+		{
+			LHS[row][col] = exp(LHS[row][col]);
+		}
+	}
+}
