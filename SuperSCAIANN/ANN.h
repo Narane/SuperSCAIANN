@@ -25,9 +25,6 @@ public:
 	vector<vector<float>> WeightsInputToHidden;
 	vector<vector<float>> WeightsHiddenToOutput;
 
-	vector<vector<float>> BiasInputToHidden;
-	vector<vector<float>> BiasHiddenToOutput;
-
 	// The weights should be 0~1; the upperbound is beacause it's nice to keep starting weights low
 	void RandomizeWeights(vector<vector<float>>& WeightMatrix, float UpperBound, size_t LeftNodes, size_t RightNodes);
 	void InitializeBias(vector<vector<float>>& BiasVector, size_t NodeCount);

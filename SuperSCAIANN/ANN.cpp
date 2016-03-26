@@ -9,10 +9,11 @@
 
 void ANN::BuildModel()
 {
+	unsigned int iseed = (unsigned int)time(NULL);
+	srand(iseed);
+
 	RandomizeWeights(WeightsInputToHidden, 0.3f, InputNodeCount, HiddenLayerNodeCount);
 	RandomizeWeights(WeightsHiddenToOutput, 0.3f, HiddenLayerNodeCount, OutputNodeCount);
-	InitializeBias(BiasInputToHidden, HiddenLayerNodeCount);
-	InitializeBias(BiasHiddenToOutput, OutputNodeCount);
 
 	HiddenLayerValues.resize(HiddenLayerNodeCount);
 	OutputLayerValues.resize(OutputNodeCount);
@@ -168,13 +169,10 @@ vector<vector<float>> ANN::ActivationMatrixDrv(vector<vector<float>> const& Inpu
 //                   (WeightMatrix[x][y])
 void ANN::RandomizeWeights(vector<vector<float>>& WeightMatrix, float UpperBound, size_t LeftNodes, size_t RightNodes)
 {
-	unsigned int iseed = (unsigned int)time(NULL);
-	srand(iseed);
-
 	WeightMatrix.resize(LeftNodes);
 	for (size_t row = 0; row < LeftNodes; ++row)
 	{
-		WeightMatrix[row].resize(LeftNodes);
+		WeightMatrix[row].resize(RightNodes);
 	}
 
 	for (size_t row = 0; row < LeftNodes; ++row)

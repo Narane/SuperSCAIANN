@@ -1,5 +1,8 @@
 #pragma once
 #include <BWAPI.h>
+#include <vector>
+
+using std::vector;
 
 class ANN;
 
@@ -31,7 +34,24 @@ public:
 	virtual void onUnitComplete(BWAPI::Unit unit);
 
 	float evaluateArmy(const BWAPI::Unitset &units);
+	void PopulateTeamScores();
 
 	const static float GAS_MINERAL_COST_RATIO;
 	// Everything below this line is safe to modify.
+
+private:
+	size_t frameCountForAIEval = 120; //wait X frames to rethink AI
+	size_t frameCounter = 0;
+
+	float lastAllyStrength;
+	float lastEnemyStrength;
+
+	vector<int> aggroTable;
+	void FillAggroTable();
+	void ClearAggroTable();
+
+	Position UnitRunAway(BWAPI::Unit unit, int radius);
+
+	int greatestEnemyAttackRange;
+	void SetMaxEnemyRange();
 };
