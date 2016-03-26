@@ -9,89 +9,119 @@
 
 void ANN::BuildModel()
 {
-	const size_t HiddenLayerNodeCount = 5;
-	const size_t InputNodeCount = 6;
-	const size_t OutputNodeCount = 2;
-
-	// Gradient descent parameters
-	const float epsilon = 0.01; // learning rate
-	const float eta = 0.01; // regularization power
-
 	RandomizeWeights(WeightsInputToHidden, 0.3f, InputNodeCount, HiddenLayerNodeCount);
-	RandomizeWeights(WeightsHiddenToOutput, 0.3f, InputNodeCount, HiddenLayerNodeCount);
+	RandomizeWeights(WeightsHiddenToOutput, 0.3f, HiddenLayerNodeCount, OutputNodeCount);
 	InitializeBias(BiasInputToHidden, HiddenLayerNodeCount);
 	InitializeBias(BiasHiddenToOutput, OutputNodeCount);
+
+	HiddenLayerValues.resize(HiddenLayerNodeCount);
+	OutputLayerValues.resize(OutputNodeCount);
 }
 
-void ANN::Update(const vector<vector<float>>& X)
+//
+void ANN::TrainWithData(const vector<float>& TrainInputs, const vector<float>& TrainOutputs)
 {
-	vector<vector<float>> z1 = MatrixMaths::MatrixAdd(MatrixMaths::MatrixMultiply(X, WeightsInputToHidden), BiasInputToHidden);
-	vector<vector<float>> a1 = ActivationMatrix(z1);
-	vector<vector<float>> z2 = MatrixMaths::MatrixAdd(MatrixMaths::MatrixMultiply(a1, WeightsHiddenToOutput), BiasHiddenToOutput);
-	MatrixMaths::MatrixInPlaceExp(z2);
-	
+	CalculateLayers(TrainInputs);
 
+	//Backprop
 
-	/*
-	# Forward propagation
-	z1 = X.dot(W1) + b1
-		a1 = np.tanh(z1)
-		z2 = a1.dot(W2) + b2
-		exp_scores = np.exp(z2)
-		probs = exp_scores / np.sum(exp_scores, axis = 1, keepdims = True)
+	// First we get the error of the output
+	vector<float> outputError;
+	outputError.resize(OutputNodeCount);
+	float totalError = 0;
+	for (size_t outputN = 0; outputN < OutputNodeCount; ++outputN)
+	{
+		outputError[outputN] = TrainOutputs[outputN] - OutputLayerValues[outputN];
+		totalError += outputError[outputN];
+	}
 
-		# Backpropagation
-		delta3 = probs
-		delta3[range(num_examples), y] -= 1
-		dW2 = (a1.T).dot(delta3)
-		db2 = np.sum(delta3, axis = 0, keepdims = True)
-		delta2 = delta3.dot(W2.T) * (1 - np.power(a1, 2))
-		dW1 = np.dot(X.T, delta2)
-		db1 = np.sum(delta2, axis = 0)
+	// New weights for hidden to output
+	vector<float> outputDeltas;
+	outputDeltas.resize(OutputNodeCount);
+	for (size_t outputN = 0; outputN < OutputNodeCount; ++outputN)
+	{
+		outputDeltas[outputN] = outputError[outputN] * ActivationFunctionDrv(OutputLayerTot[outputN]);
+		for (size_t hiddenN = 0; hiddenN < HiddenLayerNodeCount; ++hiddenN)
+		{
+			const float diff = epsilon * outputDeltas[outputN] * HiddenLayerValues[hiddenN];
+			WeightsHiddenToOutput[hiddenN][outputN] += diff;
+		}
+	}
 
-		# Add regularization terms(b1 and b2 don't have regularization terms)
-		dW2 += reg_lambda * W2
-		dW1 += reg_lambda * W1
+	// New weights for input to hidden
+	vector<float> inputDeltas;
+	inputDeltas.resize(HiddenLayerNodeCount);
+	for (size_t hiddenN = 0; hiddenN < HiddenLayerNodeCount; ++hiddenN)
+	{
+		float temp = 0;
+		for (size_t outputN = 0; outputN < OutputNodeCount; ++outputN)
+		{
+			temp += WeightsHiddenToOutput[hiddenN][outputN] * outputDeltas[outputN];
+		}
+		inputDeltas[hiddenN] = temp * ActivationFunctionDrv(HiddenLayerTot[hiddenN]);
+		for (size_t inputN = 0; inputN < InputNodeCount; ++inputN)
+		{
+			const float diff = epsilon * inputDeltas[hiddenN] * TrainInputs[inputN];
+			WeightsInputToHidden[inputN][hiddenN] += diff;
+		}
+	}
+}
 
-		# Gradient descent parameter update
-		W1 += -epsilon * dW1
-		b1 += -epsilon * db1
-		W2 += -epsilon * dW2
-		b2 += -epsilon * db2
+void ANN::CalculateLayers(const vector<float>& InputValues)
+{
+	if (InputValues.size() != InputNodeCount)
+	{
+		// uh oh
+		return;
+	}
 
-		# Assign new parameters to the model
-		model = { 'W1': W1, 'b1' : b1, 'W2' : W2, 'b2' : b2 }
+	// Input layer to hidden layer
+	for (size_t hiddenN = 0; hiddenN < HiddenLayerNodeCount; ++hiddenN)
+	{
+		HiddenLayerValues[hiddenN] = 0.0f;
+		for (size_t inputN = 0; inputN < InputNodeCount; ++inputN)
+		{
+			HiddenLayerValues[hiddenN] += WeightsInputToHidden[inputN][hiddenN] * InputValues[inputN];
+		}
+		HiddenLayerTot[hiddenN] = HiddenLayerValues[hiddenN];
+		HiddenLayerValues[hiddenN] = ActivationFunction(HiddenLayerValues[hiddenN]);
+	}
 
-		# Optionally print the loss.
-		# This is expensive because it uses the whole dataset, so we don't want to do it too often.
-		if print_loss and i % 1000 == 0:
-		print "Loss after iteration %i: %f" % (i, calculate_loss(model))
-	*/
+	for (size_t outputN = 0; outputN < OutputNodeCount; ++outputN)
+	{
+		OutputLayerValues[outputN] = 0;
+		for (size_t hiddenN = 0; hiddenN < HiddenLayerNodeCount; ++hiddenN)
+		{
+			OutputLayerValues[outputN] += WeightsHiddenToOutput[hiddenN][outputN] * HiddenLayerValues[hiddenN];
+		}
+		OutputLayerTot[outputN] = OutputLayerValues[outputN];
+		OutputLayerValues[outputN] = ActivationFunction(OutputLayerValues[outputN]);
+	}
 }
 
 
-float ANN::ActivationFunction(const float x)
+float ANN::ActivationFunction(const float X)
 {
-	return (tanh(x) + 1.0f) / 2.0f;
+	return (tanh(X) + 1.0f) / 2.0f;
 }
 
-float ANN::ActivationFunctionDrv(const float x)
+float ANN::ActivationFunctionDrv(const float X)
 {
-	const float tanout = tanh(x);
+	const float tanout = tanh(X);
 	return (1.0f - tanout*tanout) / 2.0f;
 }
 
 // Take a matrix, return a copy matrix that applies the activation functions element-wise
-vector<vector<float>> ANN::ActivationMatrix(vector<vector<float>> const& inputMat)
+vector<vector<float>> ANN::ActivationMatrix(vector<vector<float>> const& InputMat)
 {
 	vector<vector<float>> returnMat;
-	const size_t rowCount = inputMat.size();
-	if (inputMat.size() == rowCount)
+	const size_t rowCount = InputMat.size();
+	if (InputMat.size() == rowCount)
 	{
 		return returnMat;
 	}
 
-	const size_t colCount = inputMat[0].size();
+	const size_t colCount = InputMat[0].size();
 	for (size_t row = 0; row < returnMat.size(); ++row)
 	{
 		returnMat[row].resize(colCount);
@@ -101,22 +131,22 @@ vector<vector<float>> ANN::ActivationMatrix(vector<vector<float>> const& inputMa
 	{
 		for (size_t col = 0; col < colCount; ++col)
 		{
-			returnMat[row][col] = ActivationFunction(inputMat[row][col]);
+			returnMat[row][col] = ActivationFunction(InputMat[row][col]);
 		}
 	}
 }
 
 // Take a matrix, return a copy matrix that applies the derivative of the activation functions element-wise
-vector<vector<float>> ANN::ActivationMatrixDrv(vector<vector<float>> const& inputMat)
+vector<vector<float>> ANN::ActivationMatrixDrv(vector<vector<float>> const& InputMat)
 {
 	vector<vector<float>> returnMat;
-	const size_t rowCount = inputMat.size();
-	if (inputMat.size() == rowCount)
+	const size_t rowCount = InputMat.size();
+	if (InputMat.size() == rowCount)
 	{
 		return returnMat;
 	}
 
-	const size_t colCount = inputMat[0].size();
+	const size_t colCount = InputMat[0].size();
 	for (size_t row = 0; row < returnMat.size(); ++row)
 	{
 		returnMat[row].resize(colCount);
@@ -126,25 +156,30 @@ vector<vector<float>> ANN::ActivationMatrixDrv(vector<vector<float>> const& inpu
 	{
 		for (size_t col = 0; col < colCount; ++col)
 		{
-			returnMat[row][col] = ActivationFunctionDrv(inputMat[row][col]);
+			returnMat[row][col] = ActivationFunctionDrv(InputMat[row][col]);
 		}
 	}
 }
 
-void ANN::RandomizeWeights(vector<vector<float>>& WeightMatrix, float UpperBound, size_t InputNodeCount, size_t HiddenLayerNodeCount)
+//
+//   layer 1                                              layer 2
+// 
+// (leftnode x)---weight from leftnode to rightnode---->(rightnode y)
+//                   (WeightMatrix[x][y])
+void ANN::RandomizeWeights(vector<vector<float>>& WeightMatrix, float UpperBound, size_t LeftNodes, size_t RightNodes)
 {
 	unsigned int iseed = (unsigned int)time(NULL);
 	srand(iseed);
 
-	WeightMatrix.resize(InputNodeCount);
-	for (size_t row = 0; row < InputNodeCount; ++row)
+	WeightMatrix.resize(LeftNodes);
+	for (size_t row = 0; row < LeftNodes; ++row)
 	{
-		WeightMatrix[row].resize(HiddenLayerNodeCount);
+		WeightMatrix[row].resize(LeftNodes);
 	}
 
-	for (size_t row = 0; row < InputNodeCount; ++row)
+	for (size_t row = 0; row < LeftNodes; ++row)
 	{
-		for (size_t col = 0; col < HiddenLayerNodeCount; ++col)
+		for (size_t col = 0; col < RightNodes; ++col)
 		{
 			WeightMatrix[row][col] = (rand() / RAND_MAX) * UpperBound;
 		}

@@ -89,7 +89,6 @@
   <ItemGroup>
     <ClCompile Include="ANN.cpp" />
     <ClCompile Include="Dll.cpp" />
-    <ClCompile Include="ExampleAIClient.cpp" />
     <ClCompile Include="ExampleAIModule.cpp" />
     <ClCompile Include="MatrixMaths.cpp" />
   </ItemGroup>
