@@ -1,6 +1,8 @@
 #include <vector>
+#include <map>
 #include <math.h>
 using std::vector;
+using std::map;
 
 class ANN
 {
@@ -31,10 +33,12 @@ public:
 
 private:
 	const size_t HiddenLayerNodeCount = 5;
-	const size_t InputNodeCount = 6;
-	const size_t OutputNodeCount = 2;
+	size_t InputNodeCount;
+	size_t OutputNodeCount;
 
 	// Gradient descent parameters
 	const float epsilon = 0.05f; // learning rate
 	const float eta = 0.01f; // regularization power
+
+	map< vector< vector<float> >, vector< vector<float> > > LoadedInputOutputData;
 };

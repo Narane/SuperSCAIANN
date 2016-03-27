@@ -1,21 +1,15 @@
-
 // basic file operations
+#include "Generator.h""
 #include <iostream>
 #include <fstream>
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <iostream>
-#include <vector>
 #include <string>
 #include <stdlib.h>
 #include <sstream>
-#include <map>
 using namespace std;
-
-int NUM_SAMPLES = 1000;
-int MAX_STR = 1800;
-double RANDOM_GLITCH = 0.02;
 
 /*
 void saveModel(vector <vector<float> > model)
@@ -37,7 +31,15 @@ outputFile << endl;
 outputFile.close();
 }*/
 
-std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
+Generator::Generator()
+{
+}
+
+Generator::~Generator()
+{
+}
+
+std::vector<std::string>& Generator::split(const std::string &s, char delim, std::vector<std::string> &elems) {
 	std::stringstream ss(s);
 	std::string item;
 	while (std::getline(ss, item, delim)) {
@@ -47,15 +49,15 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 }
 
 
-std::vector<std::string> split(const std::string &s, char delim) {
+std::vector<std::string> Generator::split(const std::string &s, char delim) {
 	std::vector<std::string> elems;
 	split(s, delim, elems);
 	return elems;
 }
 
-map< vector<vector<float> >, vector<vector<float> > > loadData()
+map< vector<vector<float> >, vector<vector<float> > > Generator::loadData()
 {
-	ifstream inputFile("example.txt");
+	ifstream inputFile(mypath);
 
 	int numRows;
 	int numCols;
@@ -108,22 +110,19 @@ map< vector<vector<float> >, vector<vector<float> > > loadData()
 	return model;
 }
 
-int main() {
+void Generator::generate() {
 	ofstream myfile;
-	myfile.open("example.txt");
+	myfile.open(mypath);
 
 	//Num training samples, num cols
-	myfile << NUM_SAMPLES * 3 << "," << 6 << "," << 2 << "\n";
-
-
-
+	myfile << NUM_SAMPLES * 3 << "," << 7 << "," << 2 << "\n";
 
 	srand(time(NULL));
 
 
 	//0 Marine, 32 Firebat, 34 Medic
 	//    class,        %,        ???            0 to MAX_STR,     0 to masStr,     [0,1]
-	//Unit Type, MyHealth, numAtkingUs, OurStrength, TheirStrength, Output Goal [0 = AtkMove, 1 = back?]
+	//Threat rating, Range, MyHealth, numAtkingUs, OurStrength, TheirStrength, Output Goal [0 = AtkMove, 1 = back?]
 	//Marine
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
@@ -143,7 +142,7 @@ int main() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << 0 << "," << myHealth << "," << numAtkingUs << "," << ourStr << "," << theirStr << "," << goal << endl;
+		myfile << 6 << "," << 4 << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 
@@ -166,7 +165,7 @@ int main() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << 32 << "," << myHealth << "," << numAtkingUs << "," << ourStr << "," << theirStr << "," << goal << endl;
+		myfile << 8 << "," << 2 << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 
@@ -189,12 +188,12 @@ int main() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << 34 << "," << myHealth << "," << numAtkingUs << "," << ourStr << "," << theirStr << "," << goal << endl;
+		myfile << 10 << "," << 2 << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 	myfile.close();
 
-	map< vector<vector<float> >, vector<vector<float> > > trainingSet = loadData();
+	//map< vector<vector<float> >, vector<vector<float> > > trainingSet = loadData();
 
 	/*
 	for (map< vector<vector<float> >, vector<vector<float> > >::iterator it = model.begin(); it != model.end(); it++) {
@@ -215,5 +214,4 @@ int main() {
 
 	//string str;
 	//cin >> str;
-	return 0;
 }

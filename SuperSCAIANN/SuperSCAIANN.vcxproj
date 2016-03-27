@@ -89,14 +89,16 @@
   <ItemGroup>
     <ClCompile Include="ANN.cpp" />
     <ClCompile Include="Dll.cpp" />
-    <ClCompile Include="ExampleAIModule.cpp" />
+    <ClCompile Include="Jefftang.cpp" />
+    <ClCompile Include="Generator.cpp" />
     <ClCompile Include="MatrixMaths.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ANN.h" />
-    <ClInclude Include="ExampleAIModule.h" />
+    <ClInclude Include="Helpers.h" />
+    <ClInclude Include="Jefftang.h" />
+    <ClInclude Include="Generator.h" />
     <ClInclude Include="MatrixMaths.h" />
-    <ClInclude Include="Neuron.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

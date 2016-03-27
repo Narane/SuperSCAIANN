@@ -4,12 +4,14 @@
     <ClCompile Include="ANN.cpp" />
     <ClCompile Include="MatrixMaths.cpp" />
     <ClCompile Include="Dll.cpp" />
-    <ClCompile Include="ExampleAIModule.cpp" />
+    <ClCompile Include="Generator.cpp" />
+    <ClCompile Include="Jefftang.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ANN.h" />
     <ClInclude Include="MatrixMaths.h" />
-    <ClInclude Include="Neuron.h" />
-    <ClInclude Include="ExampleAIModule.h" />
+    <ClInclude Include="Generator.h" />
+    <ClInclude Include="Jefftang.h" />
+    <ClInclude Include="Helpers.h" />
   </ItemGroup>
 </Project>

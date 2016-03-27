@@ -4,7 +4,7 @@
 
 #include "ANN.h"
 #include "MatrixMaths.h"
-
+#include "Generator.h"
 
 
 void ANN::BuildModel()
@@ -12,11 +12,34 @@ void ANN::BuildModel()
 	unsigned int iseed = (unsigned int)time(NULL);
 	srand(iseed);
 
+	Generator::generate();
+	LoadedInputOutputData = Generator::loadData();
+	size_t dataCount = LoadedInputOutputData.size();
+
+	// "this is so ugly I cannot describe how ugly it is" - "Jeffrey Tang"
+	InputNodeCount = LoadedInputOutputData.begin()->first[0].size();
+	OutputNodeCount = LoadedInputOutputData.begin()->second[0].size();
+
 	RandomizeWeights(WeightsInputToHidden, 0.3f, InputNodeCount, HiddenLayerNodeCount);
 	RandomizeWeights(WeightsHiddenToOutput, 0.3f, HiddenLayerNodeCount, OutputNodeCount);
 
+	HiddenLayerTot.resize(HiddenLayerNodeCount);
 	HiddenLayerValues.resize(HiddenLayerNodeCount);
 	OutputLayerValues.resize(OutputNodeCount);
+	OutputLayerTot.resize(OutputNodeCount);
+
+	for (size_t trainedTimes = 0; trainedTimes < 10; ++trainedTimes)
+	{
+		for (map<vector<vector<float>>, vector<vector<float>>>::const_iterator it = LoadedInputOutputData.begin()
+			; it != LoadedInputOutputData.end()
+			; ++it
+			)
+		{
+			const vector<float>& inputs = it->first[0];
+			const vector<float>& outputs = it->second[0];
+			TrainWithData(inputs, outputs);
+		}
+	}
 }
 
 //
@@ -70,12 +93,6 @@ void ANN::TrainWithData(const vector<float>& TrainInputs, const vector<float>& T
 
 void ANN::CalculateLayers(const vector<float>& InputValues)
 {
-	if (InputValues.size() != InputNodeCount)
-	{
-		// uh oh
-		return;
-	}
-
 	// Input layer to hidden layer
 	for (size_t hiddenN = 0; hiddenN < HiddenLayerNodeCount; ++hiddenN)
 	{
@@ -179,7 +196,9 @@ void ANN::RandomizeWeights(vector<vector<float>>& WeightMatrix, float UpperBound
 	{
 		for (size_t col = 0; col < RightNodes; ++col)
 		{
-			WeightMatrix[row][col] = (rand() / RAND_MAX) * UpperBound;
+			const float tang = rand();
+			const float jeff = (tang / RAND_MAX) * UpperBound;
+			WeightMatrix[row][col] = jeff;
 		}
 	}
 }
