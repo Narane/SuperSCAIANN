@@ -4,14 +4,14 @@
 using namespace std;
 
 static int NUM_SAMPLES = 1000;
-static double RANDOM_GLITCH = 0.02;
+static int RANDOM_GLITCH = 97;
 
 static int MAX_STR = 1800;
 static float MAX_THREAT = 12.0f;
 static float MAX_RANGE = 8.0f;
 static float MAX_COMBATANTS = 4.0f;
 
-static string mypath = "C:\\Program Files (x86)\\StarCraft\\bwapi-data\\AI\\trainingfiles.txt";
+static string mypath = "C:\\Users\\Ornalth\\Desktop\\bwapiAI\\SuperSCAIANN\\trainingfiles.txt";
 
 class Generator
 {
