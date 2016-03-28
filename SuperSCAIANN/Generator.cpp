@@ -1,5 +1,6 @@
 // basic file operations
 #include "Generator.h"
+#include "Helpers.h"
 #include <iostream>
 #include <fstream>
 #include <stdio.h>      /* printf, scanf, puts, NULL */
@@ -120,7 +121,7 @@ void Generator::generate() {
 	myfile.open(mypath);
 
 	//Num training samples, num cols
-	myfile << NUM_SAMPLES * 3 << "," << 8 << "," << 2 << "\n";
+	myfile << NUM_SAMPLES * 3 << "," << 9 << "," << 2 << "\n";
 
 	srand(time(NULL));
 
@@ -131,11 +132,11 @@ void Generator::generate() {
 	//Zealot
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
-		float ourStr = ((i % 40) * MAX_STR) / 40.f;
-		float theirStr = ((i % 80) * MAX_STR) / 80.f;
-		float myHealth = (float)(i % 160) / 160.f;
-		float myShield = (float)(i % 320) / 320.f;
-		float pctOfTeamHealth = (float)(i % 640) / 640.f;
+		float ourStr = ((i % 39) * MAX_STR) / 39.f;
+		float theirStr = ((i % 79) * MAX_STR) / 79.f;
+		float myHealth = (float)(i % 159) / 159.f;
+		float myShield = (float)(i % 319) / 319.f;
+		float pctOfTeamHealth = (float)(i % 639) / 639.f;
 		int goal = 0;
 
 		float numAtkingUs = (i % ((int)(MAX_COMBATANTS)+1)) / MAX_COMBATANTS;
@@ -149,22 +150,22 @@ void Generator::generate() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << (float)3 / MAX_THREAT << "," << 1 / MAX_RANGE << "," << myHealth << "," << myShield << "," << pctOfTeamHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
+		myfile << (float)Helpers::GetUnitThreatRating(BWAPI::UnitTypes::Protoss_Zealot) / MAX_THREAT << "," << 1 / MAX_RANGE << "," << myHealth << "," << myShield << "," << pctOfTeamHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 
 	//Dragoon
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
-		float ourStr = ((i % 40) * MAX_STR) / 40.f;
-		float theirStr = ((i % 80) * MAX_STR) / 80.f;
-		float myHealth = (float)(i % 160) / 160.f;
-		float myShield = (float)(i % 320) / 320.f;
-		float pctOfTeamHealth = (float)(i % 640) / 640.f;
+		float ourStr = ((i % 39) * MAX_STR) / 39.f;
+		float theirStr = ((i % 79) * MAX_STR) / 79.f;
+		float myHealth = (float)(i % 159) / 159.f;
+		float myShield = (float)(i % 319) / 319.f;
+		float pctOfTeamHealth = (float)(i % 639) / 639.f;
 		int goal = 0;
 
 		float numAtkingUs = (i % ((int)(MAX_COMBATANTS)+1)) / MAX_COMBATANTS;
-		if (myHealth < 1.0f && myShield < 0.2f && pctOfTeamHealth < 0.8f && (numAtkingUs * MAX_COMBATANTS) >= 1 && (ourStr / theirStr) < 1.2f)
+		if (myHealth < 1.0f && myShield < 0.4f && pctOfTeamHealth < 0.8f && (numAtkingUs * MAX_COMBATANTS) >= 1 && (ourStr < theirStr))
 		{
 			goal = 1;
 		}
@@ -174,18 +175,18 @@ void Generator::generate() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << (float)8 / MAX_THREAT << "," << 4 / MAX_RANGE << "," << myHealth << "," << myShield << "," << pctOfTeamHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
+		myfile << (float)Helpers::GetUnitThreatRating(BWAPI::UnitTypes::Protoss_Dragoon) / MAX_THREAT << "," << 4 / MAX_RANGE << "," << myHealth << "," << myShield << "," << pctOfTeamHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 
 	//Archon
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
-		float ourStr = ((i % 40) * MAX_STR) / 40.f;
-		float theirStr = ((i % 80) * MAX_STR) / 80.f;
-		float myHealth = (float)(i % 160) / 160.f;
-		float myShield = (float)(i % 320) / 320.f;
-		float pctOfTeamHealth = (float)(i % 640) / 640.f;
+		float ourStr = ((i % 39) * MAX_STR) / 39.f;
+		float theirStr = ((i % 79) * MAX_STR) / 79.f;
+		float myHealth = (float)(i % 159) / 159.f;
+		float myShield = (float)(i % 319) / 319.f;
+		float pctOfTeamHealth = (float)(i % 639) / 639.f;
 		int goal = 0;
 
 		float numAtkingUs = (i % ((int)(MAX_COMBATANTS)+1)) / MAX_COMBATANTS;
@@ -200,7 +201,7 @@ void Generator::generate() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << (float)12 / MAX_THREAT << "," << 1.5 / MAX_RANGE << "," << myHealth << "," << myShield << "," << pctOfTeamHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
+		myfile << (float)Helpers::GetUnitThreatRating(BWAPI::UnitTypes::Protoss_Archon) / MAX_THREAT << "," << 1.5 / MAX_RANGE << "," << myHealth << "," << myShield << "," << pctOfTeamHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 	myfile.close();

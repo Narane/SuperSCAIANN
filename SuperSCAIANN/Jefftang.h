@@ -53,6 +53,8 @@ size_t frameCountForAIEval = 15; //wait X frames to rethink AI
 	void FillAggroTable();
 	void ClearAggroTable();
 
+	vector<bool> alreadyRanTable;
+
 	BWAPI::Position UnitRunAway(BWAPI::Unit unit, int radius);
 
 	int greatestEnemyAttackRange;

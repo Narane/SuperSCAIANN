@@ -18,6 +18,7 @@ void Jefftang::onStart()
 
 	frameCounter = 0;
 	aggroTable.resize(4096);
+	alreadyRanTable.resize(4096);
 
 	ANNInstance = new ANN();
 	ANNInstance->BuildModel();
@@ -86,7 +87,10 @@ void Jefftang::FillAggroTable()
 		if (attackTarget != nullptr /*&& attackTarget->getPlayer()->getID() == Broodwar->self()->getID()*/)
 		{
 			const int unitID = attackTarget->getID();
-			aggroTable[unitID] += 1;
+			if (unitID >= 0 && unitID < aggroTable.size())
+			{
+				aggroTable[unitID] += 1;
+			}
 		}
 	}
 }
@@ -103,7 +107,7 @@ void Jefftang::ClearAggroTable()
 BWAPI::Position Jefftang::UnitRunAway(BWAPI::Unit unit, int radius)
 {
 	Position endPosition = unit->getPosition();
-	endPosition.x -= (0 > radius * 64) ? 0 : radius * 64;
+	endPosition.x -= (0 > radius * 32) ? 0 : radius * 32;
 	/*
 	int count = 0;
 	Position enemyPosition = BWAPI::Positions::Origin;
@@ -156,6 +160,8 @@ float Jefftang::evaluateArmy(const BWAPI::Unitset &units)
 		float totalPrice = mineralPrice + GAS_MINERAL_COST_RATIO * gasPrice;
 		int hp = unit->getHitPoints();
 		int maxhp = unit->getType().maxHitPoints();
+		hp += unit->getShields();
+		maxhp += unit->getType().maxShields();
 
 		float hpPercent = (float)hp / maxhp;
 		score += (hpPercent * totalPrice);
@@ -210,11 +216,14 @@ void Jefftang::IssueOrders()
 
 		inputData.push_back((float)Helpers::GetMaxUnitAttackRange(unit->getType()) / MAX_RANGE);
 
-		inputData.push_back((float)unit->getHitPoints() / unit->getType().maxHitPoints());
+		const float myHealthPct = (float)unit->getHitPoints() / unit->getType().maxHitPoints();
+		inputData.push_back(myHealthPct);
 
 		inputData.push_back((float)unit->getShields() / unit->getType().maxShields());
 
-		inputData.push_back(teamAverageHealthiness);
+		float myHealthVsTeam = myHealthPct / teamAverageHealthiness;
+		myHealthVsTeam = myHealthVsTeam > 1.0f ? 1.0f : myHealthVsTeam;
+		inputData.push_back(myHealthVsTeam);
 
 		const int unitID = unit->getID();
 		inputData.push_back((MAX_COMBATANTS < aggroTable[unitID] ? MAX_COMBATANTS : (float)aggroTable[unitID]) / MAX_COMBATANTS);
@@ -228,23 +237,27 @@ void Jefftang::IssueOrders()
 		vector<float> results = ANNInstance->OutputLayerValues;
 
 		// React to the output vector
-		if (results[0] > results[1])
+		if (results[0] > results[1] || alreadyRanTable[unit->getID()] == true)
 		{
-			const UnitType typeee = unit->getType();
+			if (!unit->isAttacking())
+			{
+				const UnitType typeee = unit->getType();
 
-			// Attack
-			Unit foundEnemy = unit->getClosestUnit(BWAPI::Filter::IsEnemy);
-			if (unit->canAttack() && typeee != BWAPI::UnitTypes::Terran_Medic)
-			{
-				unit->attack(foundEnemy);
-			}
-			else if (foundEnemy != nullptr)
-			{
-				unit->attack(foundEnemy->getPosition());
+				// Attack
+				Unit foundEnemy = unit->getClosestUnit(BWAPI::Filter::IsEnemy);
+				if (unit->canAttack() && typeee != BWAPI::UnitTypes::Terran_Medic)
+				{
+					unit->attack(foundEnemy);
+				}
+				else if (foundEnemy != nullptr)
+				{
+					unit->attack(foundEnemy->getPosition());
+				}
 			}
 		}
 		else
 		{
+			alreadyRanTable[unit->getID()] = true;
 			unit->move(UnitRunAway(unit, greatestEnemyAttackRange));
 		}
 	}

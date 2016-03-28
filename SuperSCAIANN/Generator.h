@@ -3,12 +3,12 @@
 #include <map>
 using namespace std;
 
-static int NUM_SAMPLES = 3200;
+static int NUM_SAMPLES = 1600;
 static int RANDOM_GLITCH = 97;
 
-static int MAX_STR = 1800;
+static int MAX_STR = 2400;
 static float MAX_THREAT = 12.0f;
-static float MAX_RANGE = 8.0f;
+static float MAX_RANGE = 6.0f;
 static float MAX_COMBATANTS = 4.0f;
 
 static string mypath = "C:\\trainingfiles.txt";

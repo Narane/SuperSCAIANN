@@ -23,6 +23,18 @@ public:
 		{
 			threatRating = 10;
 		}
+		else if (InType == BWAPI::UnitTypes::Protoss_Zealot)
+		{
+			threatRating = 3;
+		}
+		else if (InType == BWAPI::UnitTypes::Protoss_Dragoon)
+		{
+			threatRating = 7;
+		}
+		else if (InType == BWAPI::UnitTypes::Protoss_Archon)
+		{
+			threatRating = 12;
+		}
 
 		return threatRating;
 	}
