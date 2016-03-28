@@ -79,8 +79,9 @@ void ANN::BuildModel()
 
 		CalculateLayers(inputs);
 
-		int val1, index1;
-		int val2, index2;
+		int index1, index2;
+		float val1;
+		float val2;
 		val1 = argMaxIndex(OutputLayerValues, index1);
 		val2 = argMaxIndex(OutputLayerValues, index2);
 		//actualOutputs.push_back(OutputLayerValues);
@@ -92,14 +93,14 @@ void ANN::BuildModel()
 		numValidation++;
 	}
 	//Validation correct 
-	//float percentage = (double)correct/numValidation;
+	float percentage = (double)correct/numValidation;
 	
 }
 
-int ANN::argMaxIndex(vector<float> outputVector, int &index)
+float ANN::argMaxIndex(vector<float> outputVector, int &index)
 {
 	index = 0;
-	int max = -9999;//whatever.
+	float max = -9999;//whatever.
 	for (int i = 0; i < OutputNodeCount; ++i)
 	{
 		if (outputVector[i] > max)

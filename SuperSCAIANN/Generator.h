@@ -11,7 +11,7 @@ static float MAX_THREAT = 12.0f;
 static float MAX_RANGE = 8.0f;
 static float MAX_COMBATANTS = 4.0f;
 
-static string mypath = "C:\\Users\\Ornalth\\Desktop\\bwapiAI\\SuperSCAIANN\\trainingfiles.txt";
+static string mypath = "C:\\trainingfiles.txt";
 
 class Generator
 {
