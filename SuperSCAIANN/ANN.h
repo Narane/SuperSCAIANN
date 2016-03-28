@@ -37,7 +37,7 @@ private:
 	size_t OutputNodeCount;
 
 	// Gradient descent parameters
-	const float epsilon = 0.05f; // learning rate
+	const float epsilon = 0.4f; // learning rate
 	const float eta = 0.01f; // regularization power
 
 	map< vector< vector<float> >, vector< vector<float> > > LoadedInputOutputData;

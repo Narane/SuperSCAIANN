@@ -131,8 +131,8 @@ void Generator::generate() {
 		float myHealth = 1.0f * i / NUM_SAMPLES;
 		int goal = 0;
 
-		int numAtkingUs = i % 5;
-		if (myHealth < 0.5f && numAtkingUs >= 1 && ourStr < theirStr && ourStr > 800)
+		float numAtkingUs = (i % ((int)(MAX_COMBATANTS)+1)) / MAX_COMBATANTS;
+		if (myHealth < 0.5f && (numAtkingUs * MAX_COMBATANTS) >= 2 && ourStr < theirStr && ourStr > 800)
 		{
 			goal = 1;
 		}
@@ -142,7 +142,7 @@ void Generator::generate() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << 6 << "," << 4 << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
+		myfile << (float)6 / MAX_THREAT << "," << 4 / MAX_RANGE << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 
@@ -154,8 +154,8 @@ void Generator::generate() {
 		float myHealth = 1.0f * i / NUM_SAMPLES;
 		int goal = 0;
 
-		int numAtkingUs = i % 5;
-		if (myHealth < 0.3f && numAtkingUs >= 1 && ourStr < theirStr && ourStr > 600)
+		float numAtkingUs = (i % ((int)(MAX_COMBATANTS)+1)) / MAX_COMBATANTS;
+		if (myHealth < 0.3f && (numAtkingUs * MAX_COMBATANTS) >= 4 && ourStr < theirStr && ourStr > 600)
 		{
 			goal = 1;
 		}
@@ -165,7 +165,7 @@ void Generator::generate() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << 8 << "," << 2 << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
+		myfile << (float)8 / MAX_THREAT << "," << 2 / MAX_RANGE << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 
@@ -177,8 +177,8 @@ void Generator::generate() {
 		float myHealth = 1.0f * i / NUM_SAMPLES;
 		int goal = 0;
 
-		int numAtkingUs = i % 5;
-		if (myHealth < 0.75f && numAtkingUs >= 1)
+		float numAtkingUs = (i % ((int)(MAX_COMBATANTS)+1)) / MAX_COMBATANTS;
+		if (myHealth < 0.75f && (numAtkingUs * MAX_COMBATANTS) >= 1 && ourStr < theirStr && ourStr > 600)
 		{
 			goal = 1;
 		}
@@ -188,7 +188,7 @@ void Generator::generate() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << 10 << "," << 2 << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
+		myfile << (float)10 / MAX_THREAT << "," << 2 / MAX_RANGE << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 	myfile.close();

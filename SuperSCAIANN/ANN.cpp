@@ -28,7 +28,7 @@ void ANN::BuildModel()
 	OutputLayerValues.resize(OutputNodeCount);
 	OutputLayerTot.resize(OutputNodeCount);
 
-	for (size_t trainedTimes = 0; trainedTimes < 10; ++trainedTimes)
+	for (size_t trainedTimes = 0; trainedTimes < 50; ++trainedTimes)
 	{
 		for (map<vector<vector<float>>, vector<vector<float>>>::const_iterator it = LoadedInputOutputData.begin()
 			; it != LoadedInputOutputData.end()
@@ -39,6 +39,23 @@ void ANN::BuildModel()
 			const vector<float>& outputs = it->second[0];
 			TrainWithData(inputs, outputs);
 		}
+	}
+
+
+	// Testing
+	vector<vector<float>> expectedOutputs;
+	vector<vector<float>> actualOutputs;
+	for (map<vector<vector<float>>, vector<vector<float>>>::const_iterator it = LoadedInputOutputData.begin()
+		; it != LoadedInputOutputData.end()
+		; ++it
+		)
+	{
+		const vector<float>& inputs = it->first[0];
+		const vector<float>& outputs = it->second[0];
+
+		CalculateLayers(inputs);
+		actualOutputs.push_back(OutputLayerValues);
+		expectedOutputs.push_back(outputs);
 	}
 }
 
@@ -93,6 +110,12 @@ void ANN::TrainWithData(const vector<float>& TrainInputs, const vector<float>& T
 
 void ANN::CalculateLayers(const vector<float>& InputValues)
 {
+	if (InputValues.size() != InputNodeCount)
+	{
+		// think about putting a breakpoint here because this is sad
+		return;
+	}
+
 	// Input layer to hidden layer
 	for (size_t hiddenN = 0; hiddenN < HiddenLayerNodeCount; ++hiddenN)
 	{

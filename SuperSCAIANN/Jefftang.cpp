@@ -1,6 +1,7 @@
 #include "Jefftang.h"
 #include "ANN.h"
 #include "Helpers.h"
+#include "Generator.h"
 #include <iostream>
 #include <string>
 
@@ -115,10 +116,10 @@ BWAPI::Position Jefftang::UnitRunAway(BWAPI::Unit unit, int radius)
 	{
 		enemyPosition.x /= count;
 		enemyPosition.y /= count;
-	}
 
-	endPosition.x = 2 * endPosition.x - enemyPosition.x;
-	endPosition.y = 2 * endPosition.y - enemyPosition.y;
+		endPosition.x = 2 * endPosition.x - enemyPosition.x;
+		endPosition.y = 2 * endPosition.y - enemyPosition.y;
+	}
 
 	return endPosition;
 }
@@ -202,18 +203,18 @@ void Jefftang::IssueOrders()
 		vector<float> inputData;
 
 		int threatRating = Helpers::GetUnitThreatRating(unit->getType());
-		inputData.push_back((float)threatRating);
+		inputData.push_back((float)threatRating / MAX_THREAT);
 
-		inputData.push_back((float)Helpers::GetMaxUnitAttackRange(unit->getType()));
+		inputData.push_back((float)Helpers::GetMaxUnitAttackRange(unit->getType()) / MAX_RANGE);
 
 		inputData.push_back((float)unit->getHitPoints() / unit->getType().maxHitPoints());
 
 		const int unitID = unit->getID();
-		inputData.push_back((float)aggroTable[unitID]);
+		inputData.push_back((MAX_COMBATANTS < aggroTable[unitID] ? MAX_COMBATANTS : (float)aggroTable[unitID]) / MAX_COMBATANTS);
 
-		inputData.push_back((float)lastAllyStrength);
+		inputData.push_back((float)lastAllyStrength / MAX_STR);
 
-		inputData.push_back((float)lastEnemyStrength);
+		inputData.push_back((float)lastEnemyStrength / MAX_STR);
 
 		ANNInstance->CalculateLayers(inputData);
 
