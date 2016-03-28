@@ -20,11 +20,24 @@ void ANN::BuildModel()
 	size_t trainingCount = dataCount * 3 / 4;
 	//LoadedInputOutputData.begin();
 
-	map<vector<vector<float>>, vector<vector<float>>>::iterator endTrainingIt = LoadedInputOutputData.begin();
-	std::advance(endTrainingIt, dataCount);
-
-	map<vector<vector<float>>, vector<vector<float>>> trainingSet(LoadedInputOutputData.begin(), endTrainingIt);
-	map<vector<vector<float>>, vector<vector<float>>> validationSet(endTrainingIt, LoadedInputOutputData.end());
+	map<vector<vector<float>>, vector<vector<float>>> trainingSet;
+	map<vector<vector<float>>, vector<vector<float>>> validationSet;
+	
+	//ah whatever.
+	for (map<vector<vector<float>>, vector<vector<float>>>::const_iterator it = LoadedInputOutputData.begin()
+			; it != LoadedInputOutputData.end()
+			; ++it
+			)
+	{
+		if (rand() / RAND_MAX > 0.25)
+		{
+			trainingSet[it->first] = it->second;
+		}
+		else
+		{
+			validationSet[it->first] = it->second;
+		}
+	}
 
 	// "this is so ugly I cannot describe how ugly it is" - "Jeffrey Tang"
 	InputNodeCount = LoadedInputOutputData.begin()->first[0].size();
