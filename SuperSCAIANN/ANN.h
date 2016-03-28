@@ -48,4 +48,5 @@ private:
 	const float eta = 0.01f; // regularization power
 
 	map< vector< vector<float> >, vector< vector<float> > > LoadedInputOutputData;
+	int argMaxIndex(vector<float> outputVector, int &index);
 };

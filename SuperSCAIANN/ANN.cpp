@@ -17,6 +17,15 @@ void ANN::BuildModel()
 	LoadedInputOutputData = Generator::loadData();
 	size_t dataCount = LoadedInputOutputData.size();
 
+	size_t trainingCount = dataCount * 3 / 4;
+	//LoadedInputOutputData.begin();
+
+	map<vector<vector<float>>, vector<vector<float>>>::iterator endTrainingIt = LoadedInputOutputData.begin();
+	std::advance(endTrainingIt, dataCount);
+
+	map<vector<vector<float>>, vector<vector<float>>> trainingSet(LoadedInputOutputData.begin(), endTrainingIt);
+	map<vector<vector<float>>, vector<vector<float>>> validationSet(endTrainingIt, LoadedInputOutputData.end());
+
 	// "this is so ugly I cannot describe how ugly it is" - "Jeffrey Tang"
 	InputNodeCount = LoadedInputOutputData.begin()->first[0].size();
 	OutputNodeCount = LoadedInputOutputData.begin()->second[0].size();
@@ -31,8 +40,8 @@ void ANN::BuildModel()
 
 	for (size_t trainedTimes = 0; trainedTimes < 50; ++trainedTimes)
 	{
-		for (map<vector<vector<float>>, vector<vector<float>>>::const_iterator it = LoadedInputOutputData.begin()
-			; it != LoadedInputOutputData.end()
+		for (map<vector<vector<float>>, vector<vector<float>>>::const_iterator it = trainingSet.begin()
+			; it != trainingSet.end()
 			; ++it
 			)
 		{
@@ -44,11 +53,11 @@ void ANN::BuildModel()
 
 
 	// Testing
-	/*
-	vector<vector<float>> expectedOutputs;
-	vector<vector<float>> actualOutputs;
-	for (map<vector<vector<float>>, vector<vector<float>>>::const_iterator it = LoadedInputOutputData.begin()
-		; it != LoadedInputOutputData.end()
+	
+	int correct = 0;
+	int numValidation = 0;
+	for (map<vector<vector<float>>, vector<vector<float>>>::const_iterator it = validationSet.begin()
+		; it != validationSet.end()
 		; ++it
 		)
 	{
@@ -56,10 +65,37 @@ void ANN::BuildModel()
 		const vector<float>& outputs = it->second[0];
 
 		CalculateLayers(inputs);
-		actualOutputs.push_back(OutputLayerValues);
-		expectedOutputs.push_back(outputs);
+
+		int val1, index1;
+		int val2, index2;
+		val1 = argMaxIndex(OutputLayerValues, index1);
+		val2 = argMaxIndex(OutputLayerValues, index2);
+		//actualOutputs.push_back(OutputLayerValues);
+		//expectedOutputs.push_back(outputs);
+		if (index1 == index2)
+		{
+			correct++;
+		}
+		numValidation++;
 	}
-	*/
+	//Validation correct 
+	//float percentage = (double)correct/numValidation;
+	
+}
+
+int ANN::argMaxIndex(vector<float> outputVector, int &index)
+{
+	index = 0;
+	int max = -9999;//whatever.
+	for (int i = 0; i < OutputNodeCount; ++i)
+	{
+		if (outputVector[i] > max)
+		{
+			index = i;
+			max = outputVector[i];
+		}
+	}
+	return max;
 }
 
 // Run this on a loop for training
