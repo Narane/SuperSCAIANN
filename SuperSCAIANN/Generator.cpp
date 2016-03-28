@@ -101,6 +101,11 @@ map< vector<vector<float> >, vector<vector<float> > > Generator::loadData()
 		int val = atoi(tokens[numCols - 1].c_str());
 		ip2[val] = 1;
 		outputMatrix[0] = ip2;
+		if (model.find(inputMatrix) != model.end())
+		{
+			int ifddfg = 52;
+			ifddfg += 3;
+		}
 		model[inputMatrix] = outputMatrix;
 
 		//cout << endl;
@@ -115,24 +120,26 @@ void Generator::generate() {
 	myfile.open(mypath);
 
 	//Num training samples, num cols
-	myfile << NUM_SAMPLES * 3 << "," << 7 << "," << 2 << "\n";
+	myfile << NUM_SAMPLES * 3 << "," << 8 << "," << 2 << "\n";
 
 	srand(time(NULL));
 
 
-	//0 Marine, 32 Firebat, 34 Medic
 	//    class,        %,        ???            0 to MAX_STR,     0 to masStr,     [0,1]
-	//Threat rating, Range, MyHealth, numAtkingUs, OurStrength, TheirStrength, Output Goal [0 = AtkMove, 1 = back?]
-	//Marine
+	//Threat rating, Range, MyHealth, MyShield, pctOfTeamHealth, numAtkingUs, OurStrength, TheirStrength, Output Goal [0 = AtkMove, 1 = back?]
+
+	//Zealot
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
-		int ourStr = i*MAX_STR / NUM_SAMPLES;
-		int theirStr = ((i % 20) * MAX_STR) / 20;
-		float myHealth = 1.0f * i / NUM_SAMPLES;
+		float ourStr = ((i % 40) * MAX_STR) / 40.f;
+		float theirStr = ((i % 80) * MAX_STR) / 80.f;
+		float myHealth = (float)(i % 160) / 160.f;
+		float myShield = (float)(i % 320) / 320.f;
+		float pctOfTeamHealth = (float)(i % 640) / 640.f;
 		int goal = 0;
 
 		float numAtkingUs = (i % ((int)(MAX_COMBATANTS)+1)) / MAX_COMBATANTS;
-		if (myHealth < 0.5f && (numAtkingUs * MAX_COMBATANTS) >= 2 && ourStr < theirStr && ourStr > 800)
+		if (myHealth < 0.1f && myShield < 0.1f && pctOfTeamHealth < 0.5f && (numAtkingUs * MAX_COMBATANTS) >= 4)
 		{
 			goal = 1;
 		}
@@ -142,20 +149,22 @@ void Generator::generate() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << (float)6 / MAX_THREAT << "," << 4 / MAX_RANGE << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
+		myfile << (float)3 / MAX_THREAT << "," << 1 / MAX_RANGE << "," << myHealth << "," << myShield << "," << pctOfTeamHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 
-	//FB
+	//Dragoon
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
-		int ourStr = i*MAX_STR / NUM_SAMPLES;
-		int theirStr = ((i % 20) * MAX_STR) / 20;
-		float myHealth = 1.0f * i / NUM_SAMPLES;
+		float ourStr = ((i % 40) * MAX_STR) / 40.f;
+		float theirStr = ((i % 80) * MAX_STR) / 80.f;
+		float myHealth = (float)(i % 160) / 160.f;
+		float myShield = (float)(i % 320) / 320.f;
+		float pctOfTeamHealth = (float)(i % 640) / 640.f;
 		int goal = 0;
 
 		float numAtkingUs = (i % ((int)(MAX_COMBATANTS)+1)) / MAX_COMBATANTS;
-		if (myHealth < 0.3f && (numAtkingUs * MAX_COMBATANTS) >= 4 && ourStr < theirStr && ourStr > 600)
+		if (myHealth < 1.0f && myShield < 0.2f && pctOfTeamHealth < 0.8f && (numAtkingUs * MAX_COMBATANTS) >= 1 && (ourStr / theirStr) < 1.2f)
 		{
 			goal = 1;
 		}
@@ -165,20 +174,23 @@ void Generator::generate() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << (float)8 / MAX_THREAT << "," << 2 / MAX_RANGE << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
+		myfile << (float)8 / MAX_THREAT << "," << 4 / MAX_RANGE << "," << myHealth << "," << myShield << "," << pctOfTeamHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 
-	//MEDIC
+	//Archon
 	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
-		int ourStr = i*MAX_STR / NUM_SAMPLES;
-		int theirStr = ((i % 20) * MAX_STR) / 20;
-		float myHealth = 1.0f * i / NUM_SAMPLES;
+		float ourStr = ((i % 40) * MAX_STR) / 40.f;
+		float theirStr = ((i % 80) * MAX_STR) / 80.f;
+		float myHealth = (float)(i % 160) / 160.f;
+		float myShield = (float)(i % 320) / 320.f;
+		float pctOfTeamHealth = (float)(i % 640) / 640.f;
 		int goal = 0;
 
 		float numAtkingUs = (i % ((int)(MAX_COMBATANTS)+1)) / MAX_COMBATANTS;
-		if (myHealth < 0.75f && (numAtkingUs * MAX_COMBATANTS) >= 1 && ourStr < theirStr && ourStr > 600)
+		if (myHealth < 1.0f && myShield <= 0.3f)
+		//if (myHealth < 0.75f)
 		{
 			goal = 1;
 		}
@@ -188,7 +200,7 @@ void Generator::generate() {
 		{
 			goal = goal ^ 1;
 		}
-		myfile << (float)10 / MAX_THREAT << "," << 2 / MAX_RANGE << "," << myHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
+		myfile << (float)12 / MAX_THREAT << "," << 1.5 / MAX_RANGE << "," << myHealth << "," << myShield << "," << pctOfTeamHealth << "," << numAtkingUs << "," << (double)ourStr / MAX_STR << "," << (double)theirStr / MAX_STR << "," << goal << endl;
 	}
 
 	myfile.close();

@@ -3,7 +3,7 @@
 #include <map>
 using namespace std;
 
-static int NUM_SAMPLES = 1000;
+static int NUM_SAMPLES = 3200;
 static int RANDOM_GLITCH = 97;
 
 static int MAX_STR = 1800;

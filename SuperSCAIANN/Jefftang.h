@@ -43,7 +43,7 @@ private:
 	void IssueOrders();
 	void DoDebugDraws();
 	
-size_t frameCountForAIEval = 120; //wait X frames to rethink AI
+size_t frameCountForAIEval = 15; //wait X frames to rethink AI
 	size_t frameCounter = 0;
 
 	float lastAllyStrength;
@@ -57,4 +57,8 @@ size_t frameCountForAIEval = 120; //wait X frames to rethink AI
 
 	int greatestEnemyAttackRange;
 	void SetMaxEnemyRange();
+
+	// the average % health remaining in the team
+	float teamAverageHealthiness;
+	void SetTeamHealthPct();
 };

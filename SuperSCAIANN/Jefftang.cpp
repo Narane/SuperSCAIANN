@@ -103,6 +103,8 @@ void Jefftang::ClearAggroTable()
 BWAPI::Position Jefftang::UnitRunAway(BWAPI::Unit unit, int radius)
 {
 	Position endPosition = unit->getPosition();
+	endPosition.x -= (0 > radius * 64) ? 0 : radius * 64;
+	/*
 	int count = 0;
 	Position enemyPosition = BWAPI::Positions::Origin;
 	for (auto &u : unit->getUnitsInRadius(radius, BWAPI::Filter::IsEnemy))
@@ -120,7 +122,7 @@ BWAPI::Position Jefftang::UnitRunAway(BWAPI::Unit unit, int radius)
 		endPosition.x = 2 * endPosition.x - enemyPosition.x;
 		endPosition.y = 2 * endPosition.y - enemyPosition.y;
 	}
-
+	*/
 	return endPosition;
 }
 
@@ -195,11 +197,12 @@ void Jefftang::IssueOrders()
 	SetMaxEnemyRange();
 	PopulateTeamScores();
 	FillAggroTable();
+	SetTeamHealthPct();
 
 	BWAPI::Unitset allyUnits = Broodwar->self()->getUnits();
 	for (const BWAPI::Unit &unit : allyUnits)
 	{
-		//Threat rating, Range, MyHealth, numAtkingUs, OurStrength, TheirStrength, Output Goal [0 = AtkMove, 1 = back?]
+		//Threat rating, Range, MyHealth, MyShield, pctOfTeamHealth, numAtkingUs, OurStrength, TheirStrength, Output Goal [0 = AtkMove, 1 = back?]
 		vector<float> inputData;
 
 		int threatRating = Helpers::GetUnitThreatRating(unit->getType());
@@ -208,6 +211,10 @@ void Jefftang::IssueOrders()
 		inputData.push_back((float)Helpers::GetMaxUnitAttackRange(unit->getType()) / MAX_RANGE);
 
 		inputData.push_back((float)unit->getHitPoints() / unit->getType().maxHitPoints());
+
+		inputData.push_back((float)unit->getShields() / unit->getType().maxShields());
+
+		inputData.push_back(teamAverageHealthiness);
 
 		const int unitID = unit->getID();
 		inputData.push_back((MAX_COMBATANTS < aggroTable[unitID] ? MAX_COMBATANTS : (float)aggroTable[unitID]) / MAX_COMBATANTS);
@@ -286,6 +293,21 @@ void Jefftang::SetMaxEnemyRange()
 			}
 		}
 	}
+}
+
+void Jefftang::SetTeamHealthPct()
+{
+	teamAverageHealthiness = 1.0f;
+	BWAPI::Unitset allyUnits = Broodwar->self()->getUnits();
+
+	size_t unitCounter = 0;
+	float cumulHealthPct = 0.0f;
+	for (const BWAPI::Unit &unit : allyUnits)
+	{
+		++unitCounter;
+		cumulHealthPct += ((float)unit->getHitPoints() / unit->getType().maxHitPoints());
+	}
+	teamAverageHealthiness = (cumulHealthPct / (float)unitCounter);
 }
 
 void Jefftang::PopulateTeamScores()

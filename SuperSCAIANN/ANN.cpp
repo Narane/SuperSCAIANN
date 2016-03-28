@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include "ANN.h"
 #include "MatrixMaths.h"
@@ -29,7 +30,7 @@ void ANN::BuildModel()
 			; ++it
 			)
 	{
-		if (rand() / RAND_MAX > 0.25)
+		if ((double)rand() / RAND_MAX > 0.25)
 		{
 			trainingSet[it->first] = it->second;
 		}
@@ -83,7 +84,7 @@ void ANN::BuildModel()
 		float val1;
 		float val2;
 		val1 = argMaxIndex(OutputLayerValues, index1);
-		val2 = argMaxIndex(OutputLayerValues, index2);
+		val2 = argMaxIndex(outputs, index2);
 		//actualOutputs.push_back(OutputLayerValues);
 		//expectedOutputs.push_back(outputs);
 		if (index1 == index2)
@@ -197,13 +198,13 @@ void ANN::CalculateLayers(const vector<float>& InputValues)
 
 float ANN::ActivationFunction(const float X)
 {
-	return (tanh(X) + 1.0f) / 2.0f;
+	return (1.0f / (1.0f + exp(-1.0f * X)));
 }
 
 float ANN::ActivationFunctionDrv(const float X)
 {
-	const float tanout = tanh(X);
-	return (1.0f - tanout*tanout) / 2.0f;
+	const float sigoutput = ActivationFunction(X);
+	return (sigoutput * (1 - sigoutput));
 }
 
 // Take a matrix, return a copy matrix that applies the activation functions element-wise
