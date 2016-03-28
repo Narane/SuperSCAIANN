@@ -6,7 +6,8 @@
 #include "MatrixMaths.h"
 #include "Generator.h"
 
-
+// Init shenanigans
+//  Since the main AI module keeps an instance around (preconstructed) for singleton-like usage purposes, call this on Start for setup
 void ANN::BuildModel()
 {
 	unsigned int iseed = (unsigned int)time(NULL);
@@ -43,6 +44,7 @@ void ANN::BuildModel()
 
 
 	// Testing
+	/*
 	vector<vector<float>> expectedOutputs;
 	vector<vector<float>> actualOutputs;
 	for (map<vector<vector<float>>, vector<vector<float>>>::const_iterator it = LoadedInputOutputData.begin()
@@ -57,9 +59,10 @@ void ANN::BuildModel()
 		actualOutputs.push_back(OutputLayerValues);
 		expectedOutputs.push_back(outputs);
 	}
+	*/
 }
 
-//
+// Run this on a loop for training
 void ANN::TrainWithData(const vector<float>& TrainInputs, const vector<float>& TrainOutputs)
 {
 	CalculateLayers(TrainInputs);
@@ -108,6 +111,7 @@ void ANN::TrainWithData(const vector<float>& TrainInputs, const vector<float>& T
 	}
 }
 
+// Given that the weights matrix is filled, write the results to the output vectors shown below
 void ANN::CalculateLayers(const vector<float>& InputValues)
 {
 	if (InputValues.size() != InputNodeCount)
@@ -204,7 +208,7 @@ vector<vector<float>> ANN::ActivationMatrixDrv(vector<vector<float>> const& Inpu
 
 //
 //   layer 1                                              layer 2
-// 
+//   (input)											  (output)
 // (leftnode x)---weight from leftnode to rightnode---->(rightnode y)
 //                   (WeightMatrix[x][y])
 void ANN::RandomizeWeights(vector<vector<float>>& WeightMatrix, float UpperBound, size_t LeftNodes, size_t RightNodes)
