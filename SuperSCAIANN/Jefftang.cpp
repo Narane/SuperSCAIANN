@@ -24,11 +24,7 @@ void Jefftang::onStart()
 	ANNInstance->BuildModel();
 
 	// Hello World!
-	Broodwar->sendText("Hello world!");
-
-	// Print the map name.
-	// BWAPI returns std::string when retrieving a string, don't forget to add .c_str() when printing!
-	Broodwar << "The map is " << Broodwar->mapName() << "!" << std::endl;
+	Broodwar->sendText("We're going SUPER SAIANN!");
 
 	// Enable the UserInput flag, which allows us to control the bot and type messages.
 	Broodwar->enableFlag(Flag::UserInput);
@@ -44,32 +40,9 @@ void Jefftang::onStart()
 	if ( Broodwar->isReplay() )
 	{
 		return;
-
-	/*
-	// Announce the players in the replay
-	Broodwar << "The following players are in this replay:" << std::endl;
-    
-	// Iterate all the players in the game using a std:: iterator
-	Playerset players = Broodwar->getPlayers();
-	for(auto p : players)
-	{
-		// Only print the player if they are not an observer
-		if ( !p->isObserver() )
-		Broodwar << p->getName() << ", playing as " << p->getRace() << std::endl;
-	}
-	*/
 	}
 	else // if this is not a replay
 	{
-	// Retrieve you and your enemy's races. enemy() will just return the first enemy.
-	// If you wish to deal with multiple enemies then you must use enemies().
-		if (Broodwar->enemy()) // First make sure there is an enemy
-		{
-			Broodwar << "The matchup is " << Broodwar->self()->getRace() << " vs " << Broodwar->enemy()->getRace() << std::endl;
-		}
-
-		//You're a cheater.
-
 		//Disable fog of war
 		Broodwar->sendText("war aint what it used to be");
 
