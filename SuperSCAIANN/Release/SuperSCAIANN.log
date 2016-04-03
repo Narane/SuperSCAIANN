@@ -1,19 +1,49 @@
-﻿Build started 2016-03-26 4:58:45 PM.
-     1>Project "C:\Users\Narane\Documents\GitHub\SuperSCAIANN\SuperSCAIANN\SuperSCAIANN.vcxproj" on node 2 (Build target(s)).
+﻿Build started 02/04/2016 3:16:06 PM.
+     1>Project "C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\SuperSCAIANN\SuperSCAIANN.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include/ /Zi /nologo /W3 /WX- /MP /O2 /Oi /Oy- /GL /D NOMINMAX /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D EXAMPLEAIMODULE_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ExampleAIModule.cpp
-         ExampleAIModule.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../include/ /Zi /nologo /W3 /WX- /MP /O2 /Oi /Oy- /GL /D NOMINMAX /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D EXAMPLEAIMODULE_EXPORTS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ANN.cpp Jefftang.cpp
+         ANN.cpp
+         Jefftang.cpp
+     1>ANN.cpp(97): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>ANN.cpp(105): warning C4018: '<' : signed/unsigned mismatch
+     1>ANN.cpp(277): warning C4244: 'initializing' : conversion from 'int' to 'const float', possible loss of data
+     1>Jefftang.cpp(70): warning C4018: '<' : signed/unsigned mismatch
+     1>Jefftang.cpp(310): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>Jefftang.cpp(313): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Narane\Documents\GitHub\SuperSCAIANN\Release\SuperSCAIANN.dll" /INCREMENTAL:NO /NOLOGO ../lib/BWAPI.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Narane\Documents\GitHub\SuperSCAIANN\Release\SuperSCAIANN.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Narane\Documents\GitHub\SuperSCAIANN\Release\SuperSCAIANN.lib" /MACHINE:X86 /SAFESEH /DLL Release\ANN.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\SuperSCAIANN.dll" /INCREMENTAL:NO /NOLOGO ../lib/BWAPI.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\SuperSCAIANN.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\SuperSCAIANN.lib" /MACHINE:X86 /SAFESEH /DLL Release\ANN.obj
          Release\Dll.obj
-         Release\ExampleAIModule.obj
+         Release\Jefftang.obj
+         Release\Generator.obj
          Release\MatrixMaths.obj
-            Creating library C:\Users\Narane\Documents\GitHub\SuperSCAIANN\Release\SuperSCAIANN.lib and object C:\Users\Narane\Documents\GitHub\SuperSCAIANN\Release\SuperSCAIANN.exp
+            Creating library C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\SuperSCAIANN.lib and object C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\SuperSCAIANN.exp
          Generating code
          Finished generating code
-         SuperSCAIANN.vcxproj -> C:\Users\Narane\Documents\GitHub\SuperSCAIANN\Release\SuperSCAIANN.dll
-     1>Done Building Project "C:\Users\Narane\Documents\GitHub\SuperSCAIANN\SuperSCAIANN\SuperSCAIANN.vcxproj" (Build target(s)).
+     1>BWAPI.lib(AIModule.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(AIModule.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Game.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(Game.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Position.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(Position.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(UnitType.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(UnitType.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Filters.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(Filters.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(WeaponType.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(WeaponType.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Playerset.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(Playerset.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(PositionUnit.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(PositionUnit.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Color.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(Color.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Unit.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(Unit.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(DamageType.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(DamageType.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Unitset.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(Unitset.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Error.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(Error.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Player.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(Player.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Race.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(Race.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(UpgradeType.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(UpgradeType.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(TechType.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(TechType.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(UnitSizeType.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(UnitSizeType.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(ExplosionType.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(ExplosionType.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(UnitCommand.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(UnitCommand.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(Order.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(Order.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+     1>BWAPI.lib(UnitCommandType.obj) : warning LNK4099: PDB 'bwapilib.pdb' was not found with 'BWAPI.lib(UnitCommandType.obj)' or at 'C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\bwapilib.pdb'; linking object as if no debug info
+         SuperSCAIANN.vcxproj -> C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\Release\SuperSCAIANN.dll
+     1>Done Building Project "C:\Users\Ornalth\Desktop\bwapiAI\SuperSCAIANN\SuperSCAIANN\SuperSCAIANN.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:06.54
+Time Elapsed 00:00:12.09

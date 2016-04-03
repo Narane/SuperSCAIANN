@@ -94,7 +94,7 @@ void ANN::BuildModel()
 		numValidation++;
 	}
 	//Validation correct 
-	float percentage = (double)correct/numValidation;
+	validationPercentage = (double)correct/numValidation;
 	
 }
 

@@ -1,10 +1,12 @@
 #pragma once
 #include <BWAPI.h>
 #include <vector>
+#include <string>
 
 // do not ask why this is called jefftang
 
 using std::vector;
+using std::string;
 
 class ANN;
 
@@ -49,6 +51,9 @@ size_t frameCountForAIEval = 15; //wait X frames to rethink AI
 	float lastAllyStrength;
 	float lastEnemyStrength;
 
+	float originalAllyStrength;
+	float originalEnemyStrength;
+
 	vector<int> aggroTable;
 	void FillAggroTable();
 	void ClearAggroTable();
@@ -63,4 +68,6 @@ size_t frameCountForAIEval = 15; //wait X frames to rethink AI
 	// the average % health remaining in the team
 	float teamAverageHealthiness;
 	void SetTeamHealthPct();
+
+	void logResult(string s);
 };

@@ -7,6 +7,9 @@ using std::map;
 class ANN
 {
 public:
+	// Hard coded here, adjust as necessary
+	const size_t HiddenLayerNodeCount = 5;
+
 	// Init shenanigans
 	void BuildModel();
 	// Run this on a loop for training
@@ -34,10 +37,10 @@ public:
 	// The weights should be 0~1; the upperbound is beacause it's nice to keep starting weights low
 	void RandomizeWeights(vector<vector<float>>& WeightMatrix, float UpperBound, size_t LeftNodes, size_t RightNodes);
 	void InitializeBias(vector<vector<float>>& BiasVector, size_t NodeCount);
+	float validationPercentage;
 
 private:
-	// Hard coded here, adjust as necessary
-	const size_t HiddenLayerNodeCount = 5;
+	
 	
 	// Dynamically gathered from the Generator test files
 	size_t InputNodeCount;

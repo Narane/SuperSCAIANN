@@ -4,6 +4,10 @@
 #include "Generator.h"
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <sstream>
+
+using std::string;
 
 // do not ask why this is called jefftang
 
@@ -14,6 +18,8 @@ const float Jefftang::GAS_MINERAL_COST_RATIO = 1.5f;
 
 void Jefftang::onStart()
 {
+	originalAllyStrength = 0;
+	originalEnemyStrength = 0;
 	greatestEnemyAttackRange = -1;
 
 	frameCounter = 0;
@@ -48,6 +54,7 @@ void Jefftang::onStart()
 
 		//Full vision of map
 		Broodwar->sendText("black sheep wall");
+
 	}
 }
 
@@ -112,7 +119,27 @@ void Jefftang::onEnd(bool isWinner)
     // Log your win here!
   }
 
+  float a = ANNInstance->validationPercentage;
+  
+  BWAPI::Unitset allyUnits = Broodwar->self()->getUnits();
+  BWAPI::Unitset enemyUnits = Broodwar->enemies().getUnits();
+
+  float allyStr = evaluateArmy(allyUnits);
+  float enemyStr = evaluateArmy(enemyUnits);
+
+  std::ostringstream out;
+  out << "File: " << Broodwar->mapFileName() << ", VALIDATION PERCENTAGE: " << a << " ORIGINAL ALLY STR " << originalAllyStrength << " ORIGIN ENEMY STR " << originalEnemyStrength << " ALLY STR " << allyStr << " ENEMY STR " << enemyStr << endl;
+
+	logResult(out.str());
   delete ANNInstance;
+}
+
+void Jefftang::logResult(string result)
+{
+	ofstream myfile;
+	myfile.open("C:\\Users\\Ornalth\\Desktop\\bwapiAI\\SuperSCAIANN\\Data\\results" + std::to_string(ANNInstance->HiddenLayerNodeCount) + string(".txt"), std::fstream::out | std::fstream::app);
+	myfile << result;
+	myfile.close();
 }
 
 float Jefftang::evaluateArmy(const BWAPI::Unitset &units)
@@ -126,10 +153,18 @@ float Jefftang::evaluateArmy(const BWAPI::Unitset &units)
 		if (!unit->exists())
 			continue;
 
-		std::string hi = unit->getType().getName();
-
+		
 		int gasPrice = unit->getType().gasPrice();
 		int mineralPrice = unit->getType().mineralPrice();
+
+		//Archons apparently have 0 cost according to API, this is the cost of the 2 HTs used to merge for it.
+		if (unit->getType() == BWAPI::UnitTypes::Protoss_Archon)
+		{
+			gasPrice = 300;
+			mineralPrice = 100;
+		}
+
+
 		float totalPrice = mineralPrice + GAS_MINERAL_COST_RATIO * gasPrice;
 		int hp = unit->getHitPoints();
 		int maxhp = unit->getType().maxHitPoints();
@@ -304,6 +339,15 @@ void Jefftang::PopulateTeamScores()
 
 	lastAllyStrength = evaluateArmy(allyUnits);
 	lastEnemyStrength = evaluateArmy(enemyUnits);
+
+	if (originalAllyStrength < 1)
+	{
+		originalAllyStrength = lastAllyStrength;
+	}
+	if (originalEnemyStrength < 1)
+	{
+		originalEnemyStrength = lastEnemyStrength;
+	}
 }
 
 void Jefftang::onSendText(std::string text)
