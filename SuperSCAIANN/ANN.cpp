@@ -198,13 +198,15 @@ void ANN::CalculateLayers(const vector<float>& InputValues)
 
 float ANN::ActivationFunction(const float X)
 {
-	return (1.0f / (1.0f + exp(-1.0f * X)));
+	return ((X / 2.0f) / (1 + fabsf(X)) + 0.5f);
 }
 
 float ANN::ActivationFunctionDrv(const float X)
 {
-	const float sigoutput = ActivationFunction(X);
-	return (sigoutput * (1 - sigoutput));
+	// 1 / (2 * (1 + abs(X))^2)
+	const float temp1 = (1.0f + fabsf(X));
+	const float temp2 = temp1 * temp1 * 2.0f;
+	return (1.0f / temp2);
 }
 
 // Take a matrix, return a copy matrix that applies the activation functions element-wise

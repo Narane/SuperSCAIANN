@@ -86,6 +86,7 @@ void Jefftang::ClearAggroTable()
 
 BWAPI::Position Jefftang::UnitRunAway(BWAPI::Unit unit, int radius)
 {
+	// Just for the test map, a simpler location choosing
 	Position endPosition = unit->getPosition();
 	endPosition.x -= (0 > radius * 32) ? 0 : radius * 32;
 	/*
